@@ -33,6 +33,10 @@ jobs:
     docker:
       - image: node:10-alpine
     steps:
+      - run:
+          name: Setup image
+          command: apk add --no-cache ca-certificates --no-progress
+          working_directory: ./
       - attach_workspace:
           at: ./
       - run:
