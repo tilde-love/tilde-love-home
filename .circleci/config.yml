@@ -6,6 +6,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Setup image
+          command: apk add --no-cache ca-certificates
+          working_directory: ./
+      - run:
           name: Install Angular CLI
           command: npm config set unsafe-perm true && npm install @angular/cli -g
           working_directory: ./tilde-home-ng
