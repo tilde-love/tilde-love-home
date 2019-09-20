@@ -1,26 +1,33 @@
-version: 2
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
 jobs:
   build:
-    docker:
-      - image: node:10-alpine
+    executor:
+      name: node/default
+      tag: '10.4'
+    #docker:
+    #  - image: node:10-alpine
     steps:
       - checkout
-      - run:
-          name: Setup image
-          command: apk add --no-cache ca-certificates --no-progress
-          working_directory: ./
-      - run:
-          name: Install Angular CLI
-          command: npm config set unsafe-perm true && npm install @angular/cli -g
-          working_directory: ./tilde-home-ng
-      - run:
-          name: NPM Install
-          command: npm install
-          working_directory: ./tilde-home-ng
-      - run:
-          name: NPM Build
-          command: ng build --prod --no-progress
-          working_directory: ./tilde-home-ng
+      #- run:
+      #    name: Setup image
+      #    command: apk add --no-cache ca-certificates --no-progress
+      #    working_directory: ./
+      - node/with-cache:
+          steps:
+            - run:
+                name: Install Angular CLI
+                command: npm config set unsafe-perm true && npm install @angular/cli -g
+                working_directory: ./tilde-home-ng
+            - run:
+                name: NPM Install
+                command: npm install
+                working_directory: ./tilde-home-ng
+            - run:
+                name: NPM Build
+                command: ng build --prod --no-progress
+                working_directory: ./tilde-home-ng
       - run:
           name: Copy default 200 handler
           command: cp ./dist/tilde-home-ng/index.html ./dist/tilde-home-ng/200.html
@@ -30,13 +37,16 @@ jobs:
           paths:
             - tilde-home-ng
   publish-latest:
-    docker:
-      - image: node:10-alpine
+    #docker:
+    #  - image: node:10-alpine
+    executor:
+      name: node/default
+      tag: '10.4'
     steps:
-      - run:
-          name: Setup image
-          command: apk add --no-cache ca-certificates --no-progress
-          working_directory: ./
+      #- run:
+      #    name: Setup image
+      #    command: apk add --no-cache ca-certificates --no-progress
+      #    working_directory: ./
       - attach_workspace:
           at: ./
       - run:
