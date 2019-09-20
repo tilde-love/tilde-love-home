@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Install Angular CLI
-          command: npm install @angular/cli
+          command: npm install @angular/cli -g
           working_directory: ./tilde-home-ng
       - run:
           name: NPM Install
