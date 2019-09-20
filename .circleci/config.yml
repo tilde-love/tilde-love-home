@@ -42,7 +42,7 @@ jobs:
       - run:
           name: Deploy to surge
           working_directory: ./tilde-home-ng
-          command: surge ./dist/tilde-home-ng tilde.love
+          command: ./node_modules/.bin/surge ./dist/tilde-home-ng tilde.love
 workflows:
   version: 2
   build-master:
