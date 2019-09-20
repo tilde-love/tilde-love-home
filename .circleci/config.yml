@@ -5,7 +5,7 @@ jobs:
   build:
     executor:
       name: node/default
-      tag: '10.4'
+      tag: '10.9'
     #docker:
     #  - image: node:10-alpine
     steps:
@@ -21,7 +21,7 @@ jobs:
           steps:
             - run:
                 name: Install Angular CLI
-                command: npm install @angular/cli
+                command: npm install @angular/cli --save-dev
                 working_directory: ./tilde-home-ng
             - run:
                 name: NPM Install
@@ -44,7 +44,7 @@ jobs:
     #  - image: node:10-alpine
     executor:
       name: node/default
-      tag: '10.4'
+      tag: '10.9'
     steps:
       #- run:
       #    name: Setup image
