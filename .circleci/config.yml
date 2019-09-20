@@ -8,30 +8,35 @@ jobs:
       tag: '10.4'
     #docker:
     #  - image: node:10-alpine
-    #working_directory: ~/project/tilde-home-ng
     steps:
       - checkout
       #- run:
       #    name: Setup image
       #    command: apk add --no-cache ca-certificates --no-progress
       #    working_directory: ./
+      # npm config set unsafe-perm true &&
       - node/with-cache:
-          working_directory: ~/project/tilde-home-ng
+          cache-key: ./tilde-home-ng/package.json
+          dir: ./tilde-home-ng/node_modules
           steps:
             - run:
                 name: Install Angular CLI
                 command: npm install @angular/cli -g
+                working_directory: ./tilde-home-ng
             - run:
                 name: NPM Install
                 command: npm install
-            - run:
-                name: NPM Build
-                command: ng build --prod --no-progress
+                working_directory: ./tilde-home-ng
+      - run:
+          name: NPM Build
+          command: ng build --prod --no-progress
+          working_directory: ./tilde-home-ng
       - run:
           name: Copy default 200 handler
           command: cp ./dist/tilde-home-ng/index.html ./dist/tilde-home-ng/200.html
+          working_directory: ./tilde-home-ng
       - persist_to_workspace:
-          root: ~/project/
+          root: ./
           paths:
             - tilde-home-ng
   publish-latest:
