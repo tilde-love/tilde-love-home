@@ -1,0 +1,50 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: node:10-alpine
+    steps:
+      - checkout
+      - run:
+          name: NPM Install
+          command: npm install
+          working_directory: ./tilde-home-ng
+      - run:
+          name: NPM Build
+          command: ng build --prod
+          working_directory: ./tilde-home-ng
+      - run:
+          name: Copy default 200 handler
+          command: cp ./dist/tilde-home-ng/index.html ./dist/tilde-home-ng/200.html
+          working_directory: ./tilde-home-ng
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - tilde-home-ng
+  publish-latest:
+    docker:
+      - image: node:10-alpine
+    steps:
+      - attach_workspace:
+          at: ./
+     - run:
+          name: Deploy to surge
+          working_directory: ./tilde-home-ng
+          command: surge ./dist/tilde-home-ng tilde.love
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - build:
+          filters:  # required since `publish-latest` has tag filters AND requires `build`
+            tags:
+              only: /.*/
+      - publish-latest:
+          context: tilde-global
+          requires:
+            - build
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
