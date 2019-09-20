@@ -15,7 +15,7 @@ jobs:
           working_directory: ./tilde-home-ng
       - run:
           name: NPM Build
-          command: ng build --prod
+          command: ng build --prod --no-progress
           working_directory: ./tilde-home-ng
       - run:
           name: Copy default 200 handler
